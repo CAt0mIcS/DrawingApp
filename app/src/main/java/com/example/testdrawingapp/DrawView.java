@@ -16,17 +16,11 @@ import java.util.ArrayList;
 
 public class DrawView extends View
 {
-    public static int BRUSH_SIZE = 10;
-    public static final int DEFAULT_COLOR = Color.BLACK;
     public static final int DEFAULT_BG_COLOR = Color.WHITE;
-    public static final float TOUCH_TOLERANCE = 4;
-    private float mX, mY;
-    private Path mPath;
-    private Paint mPaint;
-    private ArrayList<FingerPath> paths = new ArrayList<>();
     private Bitmap mBitmap;
     private Canvas mCanvas;
     private Paint mBitmapPaint = new Paint(Paint.DITHER_FLAG);
+    private Pen mPen;
 
     public DrawView(Context context)
     {
@@ -36,19 +30,12 @@ public class DrawView extends View
     public DrawView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
-        mPaint = new Paint();
-        mPaint.setAntiAlias(true);
-        mPaint.setDither(true);
-        mPaint.setColor(DEFAULT_COLOR);
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeJoin(Paint.Join.ROUND);
-        mPaint.setStrokeCap(Paint.Cap.ROUND);
-        mPaint.setXfermode(null);
-        mPaint.setAlpha(0xff);
     }
 
-    public void init(DisplayMetrics metrics)
+    public void init(DisplayMetrics metrics, Pen pen)
     {
+        mPen = pen;
+
         int height = metrics.heightPixels;
         int width = metrics.widthPixels;
 
@@ -61,12 +48,12 @@ public class DrawView extends View
     {
         canvas.save();
         mCanvas.drawColor(DEFAULT_BG_COLOR);
-        for(FingerPath fp : paths)
+        for(FingerPath fp : mPen.paths)
         {
-            mPaint.setColor(fp.color);
-            mPaint.setStrokeWidth(fp.strokeWidth);
-            mPaint.setMaskFilter(null);
-            mCanvas.drawPath(fp.path, mPaint);
+            mPen.paint.setColor(fp.color);
+            mPen.paint.setStrokeWidth(fp.strokeWidth);
+            mPen.paint.setMaskFilter(null);
+            mCanvas.drawPath(fp.path, mPen.paint);
         }
 
         canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
@@ -75,32 +62,17 @@ public class DrawView extends View
 
     private void touchStart(float x, float y)
     {
-        mPath = new Path();
-        FingerPath fp = new FingerPath(DEFAULT_COLOR, BRUSH_SIZE, mPath);
-        paths.add(fp);
-
-        mPath.reset();
-        mPath.moveTo(x, y);
-        mX = x;
-        mY = y;
+        mPen.touchStart(this, x, y);
     }
 
     private void touchMove(float x, float y)
     {
-        float dx = Math.abs(x - mX);
-        float dy = Math.abs(y - mY);
-
-        if(dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE)
-        {
-            mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
-            mX = x;
-            mY = y;
-        }
+        mPen.touchMove(this, x, y);
     }
 
-    private void touchEnd()
+    private void touchEnd(float x, float y)
     {
-        mPath.lineTo(mX, mY);
+        mPen.touchEnd(this, x, y);
     }
 
     @Override
@@ -140,7 +112,7 @@ public class DrawView extends View
                     invalidate();
                     return true;
                 case MotionEvent.ACTION_UP:
-                    touchEnd();
+                    touchEnd(x, y);
                     invalidate();
                     return true;
         }

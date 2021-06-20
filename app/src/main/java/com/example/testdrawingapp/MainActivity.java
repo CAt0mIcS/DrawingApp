@@ -18,6 +18,6 @@ public class MainActivity extends AppCompatActivity
         mDrawView = findViewById(R.id.drawView);
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        mDrawView.init(metrics);
+        mDrawView.init(metrics, new Pen());
     }
 }
