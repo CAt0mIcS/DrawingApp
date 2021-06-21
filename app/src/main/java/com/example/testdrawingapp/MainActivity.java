@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -19,5 +20,10 @@ public class MainActivity extends AppCompatActivity
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         mDrawView.init(metrics, new Pen());
+        DrawView.TOOL_TYPES.add(MotionEvent.TOOL_TYPE_STYLUS);
+//        DrawView.TOOL_TYPES.add(MotionEvent.TOOL_TYPE_MOUSE);
+//        DrawView.TOOL_TYPES.add(MotionEvent.TOOL_TYPE_ERASER);
+//        DrawView.TOOL_TYPES.add(MotionEvent.TOOL_TYPE_FINGER);
+
     }
 }

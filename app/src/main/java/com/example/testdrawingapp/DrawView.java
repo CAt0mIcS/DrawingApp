@@ -5,17 +5,18 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+
 import java.util.ArrayList;
 
 public class DrawView extends View
 {
+    public static final ArrayList<Integer> TOOL_TYPES = new ArrayList<>();
     public static final int DEFAULT_BG_COLOR = Color.WHITE;
     private Bitmap mBitmap;
     private Canvas mCanvas;
@@ -101,8 +102,9 @@ public class DrawView extends View
                 break;
         }
 
-            switch (event.getAction())
-            {
+        if(TOOL_TYPES.contains(event.getToolType(0)))
+        {
+            switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     touchStart(x, y);
                     invalidate();
@@ -112,9 +114,7 @@ public class DrawView extends View
                     invalidate();
                     return true;
                 case MotionEvent.ACTION_UP:
-                    touchEnd(x, y);
-                    invalidate();
-                    return true;
+            }
         }
         return false;
     }
