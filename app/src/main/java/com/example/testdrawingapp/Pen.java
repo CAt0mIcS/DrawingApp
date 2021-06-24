@@ -10,19 +10,20 @@ import java.util.ArrayList;
 public class Pen implements IDrawableListener
 {
     public static int BRUSH_SIZE = 10;
-    public static final int DEFAULT_COLOR = Color.BLACK;
+    public int color;
     public static final float TOUCH_TOLERANCE = 4;
     private Path mPath;
     public ArrayList<FingerPath> paths = new ArrayList<>();
     private float mX, mY;
     public Paint paint;
 
-    public Pen()
+    public Pen(int color)
     {
+        this.color = color;
         paint = new Paint();
         paint.setAntiAlias(true);
         paint.setDither(true);
-        paint.setColor(DEFAULT_COLOR);
+        paint.setColor(this.color);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeCap(Paint.Cap.ROUND);
@@ -34,7 +35,7 @@ public class Pen implements IDrawableListener
     public void touchStart(DrawView view, float x, float y)
     {
         mPath = new Path();
-        FingerPath fp = new FingerPath(DEFAULT_COLOR, BRUSH_SIZE, mPath);
+        FingerPath fp = new FingerPath(color, BRUSH_SIZE, mPath);
         paths.add(fp);
 
         mPath.reset();

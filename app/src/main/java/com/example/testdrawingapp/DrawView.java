@@ -17,10 +17,7 @@ import java.util.ArrayList;
 public class DrawView extends View
 {
     public static final ArrayList<Integer> TOOL_TYPES = new ArrayList<>();
-    public static final int DEFAULT_BG_COLOR = Color.WHITE;
-    private Bitmap mBitmap;
-    private Canvas mCanvas;
-    private Paint mBitmapPaint = new Paint(Paint.DITHER_FLAG);
+    private Page mPage;
     private Pen mPen;
 
     public DrawView(Context context)
@@ -33,31 +30,26 @@ public class DrawView extends View
         super(context, attrs);
     }
 
-    public void init(DisplayMetrics metrics, Pen pen)
+    public void init(Pen pen)
     {
         mPen = pen;
-
-        int height = metrics.heightPixels;
-        int width = metrics.widthPixels;
-
-        mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        mCanvas = new Canvas(mBitmap);
+        mPage = new Page(Page.Template.A4);
     }
 
     @Override
     protected void onDraw(Canvas canvas)
     {
         canvas.save();
-        mCanvas.drawColor(DEFAULT_BG_COLOR);
+        mPage.drawBackground();
         for(FingerPath fp : mPen.paths)
         {
             mPen.paint.setColor(fp.color);
             mPen.paint.setStrokeWidth(fp.strokeWidth);
             mPen.paint.setMaskFilter(null);
-            mCanvas.drawPath(fp.path, mPen.paint);
+            mPage.drawPath(fp.path, mPen.paint);
         }
 
-        canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
+        mPage.draw(canvas);
         canvas.restore();
     }
 
@@ -104,7 +96,8 @@ public class DrawView extends View
 
         if(TOOL_TYPES.contains(event.getToolType(0)))
         {
-            switch (event.getAction()) {
+            switch (event.getAction())
+            {
                 case MotionEvent.ACTION_DOWN:
                     touchStart(x, y);
                     invalidate();
