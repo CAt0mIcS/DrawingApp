@@ -114,6 +114,9 @@ public class DrawView extends View
                     invalidate();
                     return true;
                 case MotionEvent.ACTION_UP:
+                    touchEnd(x, y);
+                    invalidate();
+                    return true;
             }
         }
         return false;

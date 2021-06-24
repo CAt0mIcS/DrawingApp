@@ -21,9 +21,9 @@ public class MainActivity extends AppCompatActivity
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         mDrawView.init(metrics, new Pen());
         DrawView.TOOL_TYPES.add(MotionEvent.TOOL_TYPE_STYLUS);
-//        DrawView.TOOL_TYPES.add(MotionEvent.TOOL_TYPE_MOUSE);
-//        DrawView.TOOL_TYPES.add(MotionEvent.TOOL_TYPE_ERASER);
-//        DrawView.TOOL_TYPES.add(MotionEvent.TOOL_TYPE_FINGER);
+        DrawView.TOOL_TYPES.add(MotionEvent.TOOL_TYPE_MOUSE);
+        DrawView.TOOL_TYPES.add(MotionEvent.TOOL_TYPE_ERASER);
+        DrawView.TOOL_TYPES.add(MotionEvent.TOOL_TYPE_FINGER);
 
     }
 }

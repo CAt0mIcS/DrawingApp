@@ -3,6 +3,7 @@ package com.example.testdrawingapp;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -40,6 +41,8 @@ public class Pen implements IDrawableListener
         mPath.moveTo(x, y);
         mX = x;
         mY = y;
+
+        mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
     }
 
     @Override
